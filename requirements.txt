@@ -1,7 +1,5 @@
 fastapi
 uvicorn
-sqlalchemy
+sqlalchemy[asyncio]
+greenlet
 sqladmin
-jinja2
-pydantic
-
