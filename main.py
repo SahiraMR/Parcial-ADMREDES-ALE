@@ -16,12 +16,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configuración de CORS con la IP exacta de tu frontend en AWS
+# Configuración de CORS con la IP exacta de tu frontend en AWS y comodín de respaldo
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://52.55.166.152",
-        "http://52.55.166.152/",
+        "https://52.55.166.152",
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
