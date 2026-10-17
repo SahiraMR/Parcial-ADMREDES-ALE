@@ -1,5 +1,6 @@
 fastapi
 uvicorn
-sqlalchemy[asyncio]
-greenlet
+sqlalchemy
 sqladmin
+pydantic
+email-validator
