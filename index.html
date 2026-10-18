@@ -155,7 +155,8 @@
 </div>
 
 <script>
-    const API_URL = "/api/citas";
+    // Cambiado con la barra al final para alinearse con el ProxyPass de Apache
+    const API_URL = "/api/citas/";
 
     document.getElementById("citaForm").addEventListener("submit", async (e) => {
         e.preventDefault();
