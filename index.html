@@ -155,7 +155,7 @@
 </div>
 
 <script>
-    const API_URL = "https://api-parcial-sahira-e3a7dncchpbmhaaz.chilecentral-01.azurewebsites.net/citas";
+    const API_URL = "/api/citas";
 
     document.getElementById("citaForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -166,7 +166,6 @@
         const inputFecha = document.getElementById("fecha_cita").value;
         const fechaISO = inputFecha ? new Date(inputFecha).toISOString() : "";
 
-        // Construcción de los datos en formato de formulario x-www-form-urlencoded
         const formData = new URLSearchParams();
         formData.append("nombre_cliente", document.getElementById("nombre_cliente").value);
         formData.append("correo_cliente", document.getElementById("correo_cliente").value);
