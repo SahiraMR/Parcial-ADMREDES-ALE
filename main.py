@@ -29,8 +29,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configuración de SQLAdmin (Panel Visual)
-admin = Admin(app, engine, title="Panel de Administración - Servicios TI")
+# Configuración de SQLAdmin (Panel Visual) con base_url="/admin" para que los enlaces se mantengan en el proxy
+admin = Admin(app, engine, title="Panel de Administración - Servicios TI", base_url="/admin")
 
 class CitaServicioAdmin(ModelView, model=models.CitaServicio):
     column_list = [
