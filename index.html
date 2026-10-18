@@ -90,7 +90,7 @@
             cursor: pointer;
             transition: 0.3s ease;
             text-shadow: 0 0 5px var(--neon-pink);
-            box-shadow: 0 0 10px rgba(ff, 0, 127, 0.2);
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
         }
 
         button:hover {
@@ -149,13 +149,15 @@
     
     <div id="statusMsg"></div>
 
-    <a class="admin-link" href="https://api-parcial-sahira.azurewebsites.net/admin" target="_blank">
+    <!-- URL corregida apuntando a la región correcta de Azure -->
+    <a class="admin-link" href="https://api-parcial-sahira-e3a7dncchpbmhaaz.chilecentral-01.azurewebsites.net/admin" target="_blank">
         ⚙️ Ir al Panel SQLAdmin (Azure)
     </a>
 </div>
 
 <script>
-    const API_URL = "https://api-parcial-sahira.azurewebsites.net/citas";
+    // URL completa y corregida del backend en Azure App Service
+    const API_URL = "https://api-parcial-sahira-e3a7dncchpbmhaaz.chilecentral-01.azurewebsites.net/citas";
 
     document.getElementById("citaForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -163,11 +165,15 @@
         statusMsg.style.color = "#00f3ff";
         statusMsg.innerText = "Enviando solicitud...";
 
+        // Formatear la fecha del input datetime-local para que incluya segundos si es necesario
+        let rawFecha = document.getElementById("fecha_cita").value;
+        let fechaFormateada = rawFecha.length === 16 ? rawFecha + ":00" : rawFecha;
+
         const citaData = {
             nombre_cliente: document.getElementById("nombre_cliente").value,
             correo_cliente: document.getElementById("correo_cliente").value,
             servicio: document.getElementById("servicio").value,
-            fecha_cita: document.getElementById("fecha_cita").value,
+            fecha_cita: fechaFormateada,
             notas: document.getElementById("notas").value
         };
 
@@ -183,6 +189,8 @@
                 statusMsg.innerText = "¡Cita agendada con éxito!";
                 document.getElementById("citaForm").reset();
             } else {
+                const errorData = await response.json();
+                console.error("Detalle del error:", errorData);
                 throw new Error("Error en la respuesta del servidor");
             }
         } catch (error) {
