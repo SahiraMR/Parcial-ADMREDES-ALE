@@ -42,7 +42,10 @@ class CitaServicioAdmin(ModelView, model=models.CitaServicio):
         models.CitaServicio.creado_el,
     ]
     column_searchable_list = [models.CitaServicio.nombre_cliente, models.CitaServicio.servicio]
-    column_filters = [models.CitaServicio.estado, models.CitaServicio.servicio]
+    
+    # CORREGIDO: Uso de cadenas de texto para evitar el error 500 en los filtros de SQLAdmin
+    column_filters = ["estado", "servicio"]
+    
     name = "Cita de Servicio"
     name_plural = "Citas de Servicios TI"
     icon = "fa-solid fa-calendar-check"
