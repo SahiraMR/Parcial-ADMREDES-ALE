@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from sqladmin import Admin, ModelView
 from pydantic import BaseModel
@@ -16,17 +17,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configuración de CORS corregida: cuando allow_credentials=True, NO se debe incluir "*"
+# Configuración robusta de CORS para evitar bloqueos 403 en Azure App Service
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://52.55.166.152",
-        "https://52.55.166.152"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.options("/citas")
+def options_citas():
+    return Response(status_code=200)
 
 # Configuración de SQLAdmin (Panel Visual)
 admin = Admin(app, engine, title="Panel de Administración - Servicios TI")
