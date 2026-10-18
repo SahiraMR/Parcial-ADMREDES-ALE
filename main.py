@@ -29,7 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configuración de SQLAdmin (Panel Visual) con base_url="/admin"
+# Configuración de SQLAdmin (Panel Visual)
 admin = Admin(app, engine, title="Panel de Administración - Servicios TI", base_url="/admin")
 
 class CitaServicioAdmin(ModelView, model=models.CitaServicio):
@@ -41,9 +41,7 @@ class CitaServicioAdmin(ModelView, model=models.CitaServicio):
         models.CitaServicio.estado,
         models.CitaServicio.creado_el,
     ]
-    # CORREGIDO: Usar cadenas de texto para evitar errores de comparadores en SQLAdmin
-    column_searchable_list = ["nombre_cliente", "servicio"]
-    column_filters = ["estado", "servicio"]
+    column_searchable_list = [models.CitaServicio.nombre_cliente, models.CitaServicio.servicio]
     
     name = "Cita de Servicio"
     name_plural = "Citas de Servicios TI"
