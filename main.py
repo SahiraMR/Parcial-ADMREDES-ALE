@@ -8,7 +8,7 @@ from typing import List, Optional
 import models
 from database import engine, get_db
 
-# Crear tablas automáticas en SQLite
+# Crear tablas automáticas en la base de datos
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -16,13 +16,12 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configuración de CORS con la IP exacta de tu frontend en AWS y comodín de respaldo
+# Configuración de CORS corregida: cuando allow_credentials=True, NO se debe incluir "*"
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://52.55.166.152",
-        "https://52.55.166.152",
-        "*"
+        "https://52.55.166.152"
     ],
     allow_credentials=True,
     allow_methods=["*"],
