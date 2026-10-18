@@ -1,6 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from sqladmin import Admin, ModelView
 from pydantic import BaseModel
@@ -17,7 +16,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configuración robusta de CORS para evitar bloqueos 403 en Azure App Service
+# Configuración de CORS permisiva de respaldo
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,10 +24,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.options("/citas")
-def options_citas():
-    return Response(status_code=200)
 
 # Configuración de SQLAdmin (Panel Visual)
 admin = Admin(app, engine, title="Panel de Administración - Servicios TI")
@@ -50,16 +45,14 @@ class CitaServicioAdmin(ModelView, model=models.CitaServicio):
 
 admin.add_view(CitaServicioAdmin)
 
-# Schemas de Pydantic
-class CitaCreate(BaseModel):
+# Schemas de Pydantic para la respuesta de la API y documentación
+class CitaResponse(BaseModel):
+    id: int
     nombre_cliente: str
     correo_cliente: str
     servicio: str
     fecha_cita: str
     notas: Optional[str] = None
-
-class CitaResponse(CitaCreate):
-    id: int
     estado: str
 
     class Config:
@@ -79,8 +72,22 @@ def listar_citas(db: Session = Depends(get_db)):
     return db.query(models.CitaServicio).all()
 
 @app.post("/citas", response_model=CitaResponse)
-def crear_cita(cita: CitaCreate, db: Session = Depends(get_db)):
-    nueva_cita = models.CitaServicio(**cita.model_dump())
+def crear_cita(
+    nombre_cliente: str = Form(...),
+    correo_cliente: str = Form(...),
+    servicio: str = Form(...),
+    fecha_cita: str = Form(...),
+    notas: Optional[str] = Form(None),
+    db: Session = Depends(get_db)
+):
+    cita_data = {
+        "nombre_cliente": nombre_cliente,
+        "correo_cliente": correo_cliente,
+        "servicio": servicio,
+        "fecha_cita": fecha_cita,
+        "notas": notas
+    }
+    nueva_cita = models.CitaServicio(**cita_data)
     db.add(nueva_cita)
     db.commit()
     db.refresh(nueva_cita)
