@@ -43,6 +43,15 @@ class CitaServicioAdmin(ModelView, model=models.CitaServicio):
     ]
     column_searchable_list = [models.CitaServicio.nombre_cliente, models.CitaServicio.servicio]
     
+    # Opciones desplegables para el campo estado en el formulario de administración
+    form_choices = {
+        "estado": [
+            ("Pendiente", "Pendiente"),
+            ("En Proceso", "En Proceso"),
+            ("Finalizado", "Finalizado"),
+        ]
+    }
+    
     name = "Cita de Servicio"
     name_plural = "Citas de Servicios TI"
     icon = "fa-solid fa-calendar-check"
@@ -82,6 +91,7 @@ def crear_cita(
     servicio: str = Form(...),
     fecha_cita: str = Form(...),
     notas: Optional[str] = Form(None),
+    estado: str = Form("Pendiente"),  # Valor por defecto si no se envía
     db: Session = Depends(get_db)
 ):
     cita_data = {
@@ -89,7 +99,8 @@ def crear_cita(
         "correo_cliente": correo_cliente,
         "servicio": servicio,
         "fecha_cita": fecha_cita,
-        "notas": notas
+        "notas": notas,
+        "estado": estado
     }
     nueva_cita = models.CitaServicio(**cita_data)
     db.add(nueva_cita)
