@@ -163,32 +163,34 @@
         statusMsg.style.color = "#00f3ff";
         statusMsg.innerText = "Enviando solicitud...";
 
-        // Captura el valor de la fecha y la convierte a cadena ISO completa (YYYY-MM-DDTHH:mm:ss.sssZ)
         const inputFecha = document.getElementById("fecha_cita").value;
         const fechaISO = inputFecha ? new Date(inputFecha).toISOString() : "";
 
-        const citaData = {
-            nombre_cliente: document.getElementById("nombre_cliente").value,
-            correo_cliente: document.getElementById("correo_cliente").value,
-            servicio: document.getElementById("servicio").value,
-            fecha_cita: fechaISO,
-            notas: document.getElementById("notas").value
-        };
+        // Construcción de los datos en formato de formulario x-www-form-urlencoded
+        const formData = new URLSearchParams();
+        formData.append("nombre_cliente", document.getElementById("nombre_cliente").value);
+        formData.append("correo_cliente", document.getElementById("correo_cliente").value);
+        formData.append("servicio", document.getElementById("servicio").value);
+        formData.append("fecha_cita", fechaISO);
+        formData.append("notas", document.getElementById("notas").value || "");
 
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(citaData)
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData
             });
 
             if (response.ok) {
+                const data = await response.json();
                 statusMsg.style.color = "#00ff88";
                 statusMsg.innerText = "¡Cita agendada con éxito!";
                 document.getElementById("citaForm").reset();
             } else {
-                const errorData = await response.json();
-                console.error("Detalle del error devuelto por la API:", errorData);
+                const errorText = await response.text();
+                console.error("Error del servidor:", errorText);
                 throw new Error("Error en la respuesta del servidor");
             }
         } catch (error) {
