@@ -29,7 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configuración de SQLAdmin (Panel Visual) con base_url="/admin" para que los enlaces se mantengan en el proxy
+# Configuración de SQLAdmin (Panel Visual) con base_url="/admin"
 admin = Admin(app, engine, title="Panel de Administración - Servicios TI", base_url="/admin")
 
 class CitaServicioAdmin(ModelView, model=models.CitaServicio):
@@ -41,9 +41,8 @@ class CitaServicioAdmin(ModelView, model=models.CitaServicio):
         models.CitaServicio.estado,
         models.CitaServicio.creado_el,
     ]
-    column_searchable_list = [models.CitaServicio.nombre_cliente, models.CitaServicio.servicio]
-    
-    # CORREGIDO: Uso de cadenas de texto para evitar el error 500 en los filtros de SQLAdmin
+    # CORREGIDO: Usar cadenas de texto para evitar errores de comparadores en SQLAdmin
+    column_searchable_list = ["nombre_cliente", "servicio"]
     column_filters = ["estado", "servicio"]
     
     name = "Cita de Servicio"
