@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from sqlalchemy.orm import Session
 from sqladmin import Admin, ModelView
 from pydantic import BaseModel
@@ -15,6 +16,9 @@ app = FastAPI(
     title="API Agendamiento de Servicios TI - Parcial Híbrido",
     version="1.0.0"
 )
+
+# Middleware crítico para confiar en las cabeceras del proxy inverso (Apache)
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 # Configuración de CORS permisiva de respaldo
 app.add_middleware(
