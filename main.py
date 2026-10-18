@@ -17,10 +17,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Middleware crítico para confiar en las cabeceras del proxy inverso (Apache)
+# Acepta y procesa las cabeceras X-Forwarded-* que envía Apache
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
-# Configuración de CORS permisiva de respaldo
+# Configuración de CORS permisiva
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
