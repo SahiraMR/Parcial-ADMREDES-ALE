@@ -6,3 +6,6 @@ pydantic==2.6.4
 email-validator==2.1.1
 greenlet
 # forzar compilacion
+#forzar forzar
+
+
