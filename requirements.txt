@@ -4,3 +4,4 @@ sqlalchemy
 sqladmin
 pydantic
 email-validator
+# forzar compilacion
